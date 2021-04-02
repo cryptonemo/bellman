@@ -345,6 +345,11 @@ pub enum SynthesisError {
     /// During GPU multiexp/fft, some GPU related error happened
     #[error("encountered a GPU error: {0}")]
     GPUError(#[from] gpu::GPUError),
+    /// During GPU kernel management
+    #[error("Scheduler error: {0}")]
+    Scheduler(#[from] scheduler_client::Error),
+    #[error("encountered an error: {0}")]
+    Other(String),
 }
 
 /// Represents a constraint system which can have new variables

@@ -36,10 +36,13 @@ blstrs = { version = "0.2", optional = true }
 # pairing feature
 paired = { version = "0.21.0", optional = true }
 
+scheduler_client = {package = "client", git = "https://github.com/Zondax/filecoin-scheduling.git"}
+
 # gpu feature 
 rust-gpu-tools = { version = "0.3.0", optional = true }
 ff-cl-gen = { version = "0.2.0", optional = true }
 fs2 = { version = "0.4.3", optional = true }
+chrono = { version = "0.4.19"}
 
 [dev-dependencies]
 hex-literal = "0.3"
