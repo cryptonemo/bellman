@@ -1,11 +1,15 @@
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use crate::bls::Engine;
 use ff::{Field, PrimeField};
 use groupy::{CurveAffine, CurveProjective};
 use rand_core::RngCore;
 use rayon::prelude::*;
+
+#[cfg(feature = "blst")]
+use crate::bls::Engine;
+#[cfg(feature = "pairing")]
+use paired::Engine;
 
 use super::{ParameterSource, Proof};
 use crate::domain::{EvaluationDomain, Scalar};
@@ -26,12 +30,12 @@ use super::{FftSolver, MultiexpSolver};
 // The return type of Fft calls
 type Repr<E> = Arc<Vec<<<E as ff::ScalarEngine>::Fr as ff::PrimeField>::Repr>>;
 type InputsResult<E> = (
-    Waiter<Result<<E as paired::Engine>::G1, SynthesisError>>,
-    Waiter<Result<<E as paired::Engine>::G1, SynthesisError>>,
-    Waiter<Result<<E as paired::Engine>::G1, SynthesisError>>,
-    Waiter<Result<<E as paired::Engine>::G1, SynthesisError>>,
-    Waiter<Result<<E as paired::Engine>::G2, SynthesisError>>,
-    Waiter<Result<<E as paired::Engine>::G2, SynthesisError>>,
+    Waiter<Result<<E as Engine>::G1, SynthesisError>>,
+    Waiter<Result<<E as Engine>::G1, SynthesisError>>,
+    Waiter<Result<<E as Engine>::G1, SynthesisError>>,
+    Waiter<Result<<E as Engine>::G1, SynthesisError>>,
+    Waiter<Result<<E as Engine>::G2, SynthesisError>>,
+    Waiter<Result<<E as Engine>::G2, SynthesisError>>,
 );
 
 fn eval<E: Engine>(
@@ -410,10 +414,7 @@ where
     let hs_call = |skip: usize,
                    multiexp_kern: &mut Option<LockedMultiexpKernel<E>>|
      -> Option<
-        Result<
-            crate::multicore::Waiter<Result<<E as paired::Engine>::G1, SynthesisError>>,
-            SynthesisError,
-        >,
+        Result<crate::multicore::Waiter<Result<<E as Engine>::G1, SynthesisError>>, SynthesisError>,
     > {
         a_s.iter()
             .skip(skip)
@@ -440,10 +441,7 @@ where
     let ls_call = |skip: usize,
                    multiexp_kern: &mut Option<LockedMultiexpKernel<E>>|
      -> Option<
-        Result<
-            crate::multicore::Waiter<Result<<E as paired::Engine>::G1, SynthesisError>>,
-            SynthesisError,
-        >,
+        Result<crate::multicore::Waiter<Result<<E as Engine>::G1, SynthesisError>>, SynthesisError>,
     > {
         aux_assignments
             .iter()
