@@ -273,7 +273,7 @@ where
     E: Engine,
     C: Circuit<E> + Send,
 {
-    info!("Bellperson {} is being used!", BELLMAN_VERSION);
+    info!("Bellperson {}-modified-0.13.0 is being used!", BELLMAN_VERSION);
 
     // Preparing things for the proofs is done a lot in parallel with the help of Rayon. Make
     // sure that those things run on the correct thread pool.
